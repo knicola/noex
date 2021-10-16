@@ -6,6 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.0.0] - 2021-10-17
+## [1.0.0] - 2021-10-16
 ### Added
 * Initial `noex` release.
