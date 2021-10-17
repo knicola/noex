@@ -1,31 +1,40 @@
 {
-  "name": "noex",
-  "version": "1.0.0",
-  "description": "Golang style error handling for `Functions`, `Promises` and `Thenables`.",
-  "author": "@knicola",
-  "license": "MIT",
-  "main": "src/index.js",
-  "types": "types/index.d.ts",
-  "files": [
-    "src/",
-    "types/"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/knicola/noex.git"
-  },
-  "bugs": {
-    "url": "https://github.com/knicola/noex/issues"
-  },
-  "homepage": "https://github.com/knicola/noex#readme",
-  "scripts": {
-    "lint": "eslint ./src",
-    "coverage": "jest --coverage",
-    "test": "jest"
-  },
-  "devDependencies": {
-    "jest": "^27.2.4",
-    "@types/jest": "^27.0.2",
-    "eslint": "~7.32.0"
-  }
+    "name": "noex",
+    "version": "1.0.0",
+    "description": "Golang style error handling for `Functions`, `Promises` and `Thenables`.",
+    "author": "@knicola",
+    "license": "MIT",
+    "keywords": [
+        "error-handling",
+        "try-catch",
+        "then-catch",
+        "golang",
+        "function",
+        "promise",
+        "thenable"
+    ],
+    "main": "src/index.js",
+    "types": "types/index.d.ts",
+    "files": [
+        "src/",
+        "types/"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/knicola/noex.git"
+    },
+    "bugs": {
+        "url": "https://github.com/knicola/noex/issues"
+    },
+    "homepage": "https://github.com/knicola/noex#readme",
+    "scripts": {
+        "lint": "eslint ./src",
+        "coverage": "jest --coverage",
+        "test": "jest"
+    },
+    "devDependencies": {
+        "jest": "^27.2.4",
+        "@types/jest": "^27.0.2",
+        "eslint": "~7.32.0"
+    }
 }
