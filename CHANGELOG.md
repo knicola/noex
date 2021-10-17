@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - <release-date>
+### Added
+* New method (`wrap()`) to wrap functions with noex.
+### Fixed
+* Example in readme
+
 ## [1.0.0] - 2021-10-17
 ### Added
 * Initial `noex` release.

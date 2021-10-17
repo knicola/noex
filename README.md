@@ -65,9 +65,36 @@ router.get('/api/resource/:id', async (req, res) => {
 ## API
 #### noex(predicate: `Promise<any>`): <code>Promise<[Result<any, Error>](#result-arrayany-error)></code>
 Run a function in a try-catch block and return the result.
+```js
+const [ content, error ] = await noex(
+    fs.promises.readFile('path/to/file')
+)
+```
 
 #### noex(predicate: `Function`): <code>[Result<any, Error>](#result-arrayany-error)</code>
 Run a promise or thenable in a try-catch block and return the result.
+```js
+const [ json, error ] = noex(function () {
+    return JSON.parse('{ "identity": "Bourne" }')
+})
+```
+
+#### noex.wrap(fn: `(...args: any[]) => Promise<any>`): <code>(...args: any[]) => Promise<[Result<any, Error>](#result-arrayany-error)></code>
+Wrap a function that returns a promise with noex.
+```js
+const readFile = noex.wrap(function (file) {
+    return fs.promises.readFile(file)
+})
+
+const [ content, error ] = await readfile('path/to/file')
+```
+#### noex.wrap(fn: `(...args: any[]) => any`): <code>(...args: any[]) => [Result<any, Error>](#result-arrayany-error)</code>
+Wrap a function with noex.
+```js
+const parseJson = noex.wrap(JSON.parse)
+
+const [ json, error ] = parseJson('{ "identity": "Bourne" }')
+```
 
 #### Result: `Array<any, Error>`
 The object to hold the resulting value or error of a function, promise or thenable.

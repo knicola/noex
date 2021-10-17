@@ -22,44 +22,64 @@ function toEqual(actual, expected) {
 } // toEqual()
 
 describe('Unit tests', () => {
-    it('should return the result of a function', () => {
-        const res = noex(() => JSON.parse('{"success":true}'))
+    describe('noex()', () => {
+        it('should return the result of a function', () => {
+            const res = noex(() => JSON.parse('{"success":true}'))
 
-        toEqual(res, [ { success: true } ])
-    }) // test
-    it('should catch and return the error of a function', () => {
-        let expectedError
-        try {
-            JSON.parse('error')
-        } catch (err) {
-            expectedError = err
-        }
-        const res = noex(() => JSON.parse('error'))
+            toEqual(res, [ { success: true } ])
+        }) // test
+        it('should catch and return the error of a function', () => {
+            let expectedError
+            try {
+                JSON.parse('error')
+            } catch (err) {
+                expectedError = err
+            }
+            const res = noex(() => JSON.parse('error'))
 
-        toEqual(res, [ undefined, expectedError ])
-    }) // test
-    it('should return the result of a promise', async () => {
-        const res = await noex(Promise.resolve('success'))
+            toEqual(res, [ undefined, expectedError ])
+        }) // test
+        it('should return the result of a promise', async () => {
+            const res = await noex(Promise.resolve('success'))
 
-        toEqual(res, [ 'success' ])
-    }) // test
-    it('should catch and return the error of a promise', async () => {
-        const res = await noex(Promise.reject('error'))
+            toEqual(res, [ 'success' ])
+        }) // test
+        it('should catch and return the error of a promise', async () => {
+            const res = await noex(Promise.reject('error'))
 
-        toEqual(res, [ undefined, 'error' ])
-    }) // test
-    it('should return error if predicate is somehow an error', () => {
-        const err = new Error('oopsies')
+            toEqual(res, [ undefined, 'error' ])
+        }) // test
+        it('should return error if predicate is somehow an error', () => {
+            const err = new Error('oopsies')
 
-        const res = noex(err)
+            const res = noex(err)
 
-        toEqual(res, [ undefined, err])
-    }) // test
-    it('should return value if predicate is somehow a value', () => {
-        const val = 'roses are red'
+            toEqual(res, [ undefined, err])
+        }) // test
+        it('should return value if predicate is somehow a value', () => {
+            const val = 'roses are red'
 
-        const res = noex(val)
+            const res = noex(val)
 
-        toEqual(res, [ val ])
-    }) // test
+            toEqual(res, [ val ])
+        }) // test
+    }) // group
+    describe('wrap()', () => {
+        it('should wrap a function', async () => {
+            const successful = noex.wrap(str => str)
+            const unsuccessful = noex.wrap(() => { throw new Error('oops') })
+            const s = successful('hello')
+            const u = unsuccessful()
+            toEqual(s, [ 'hello' ])
+            toEqual(u, [ undefined, new Error('oops') ])
+        }) // test
+        it('should wrap a promise', async () => {
+            const resolvable = noex.wrap(str => Promise.resolve(str))
+            const rejectable = noex.wrap(err => Promise.reject(err))
+            const res = await resolvable('hello')
+            const rej = await rejectable(new Error('oops'))
+            toEqual(res, [ 'hello' ])
+            toEqual(rej, [ undefined, new Error('oops') ])
+        }) // test
+    }) // group
 }) // group

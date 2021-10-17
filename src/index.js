@@ -7,7 +7,7 @@ class Result extends Array {
     /**
      * @param {any} value Value
      * @param {Error} error Error
-     * @returns {Result<T, Error>} Result
+     * @returns {Result<any, Error>} Result
      */
     constructor(value, error) {
         super(value, error)
@@ -20,7 +20,7 @@ class Result extends Array {
  * Resolve a promise with then-catch blocks and return result.
  *
  * @param {Promise<any>} promise Promise
- * @returns {Promise<Result<T, Error>>} Result
+ * @returns {Promise<Result<any, Error>>} Result
  */
 function resolve(promise) {
     return promise
@@ -32,7 +32,7 @@ function resolve(promise) {
  * Call function in a try-catch block and return result.
  *
  * @param {Function} func Function
- * @returns {Result<T, Error>} Result
+ * @returns {Result<any, Error>} Result
  */
 function call(func) {
     try {
@@ -43,10 +43,64 @@ function call(func) {
 }
 
 /**
- * Run a function, promise or thenable in a try-catch block and return the result.
+ * Wrap a function that returns a promise.
  *
- * @param {Promise<any> | Function} predicate Predicate
- * @returns {Promise<Result<T, Error>> | Result<T, Error>} Result
+ * @param {(...args: any[]) => Promise<any>} predicate Function
+ * @returns {(...args: any[]) => Promise<Result<any, Error>>} Function
+ * @example
+ * const readFile = noex.wrap(function (file) {
+ *     return fs.promises.readFile(file)
+ * })
+ *
+ * const [ content, error ] = await readfile('path/to/file')
+ *//**
+ * Wrap a function with noex.
+ *
+ * @param {(...args: any[]) => any} predicate Function
+ * @returns {(...args: any[]) => Result<any, Error>} Function
+ * @example
+ * const parseJson = noex.wrap(JSON.parse)
+ *
+ * const [ json, error ] = parseJson('{ "identity": "bourne" }')
+ */
+function wrap(predicate) {
+    /**
+     * @param {any[]} args Arguments
+     * @returns {Result<any, Error>} Result
+     */
+    return function (...args) {
+        try {
+            const res = predicate(...args)
+
+            if (res instanceof Promise || predicate.then) {
+                return resolve(res)
+            }
+
+            return new Result(res)
+        } catch (err) {
+            return new Result(undefined, err)
+        }
+    }
+}
+
+/**
+ * Run a promise or thenable in a try-catch block and return the result.
+ *
+ * @param {Promise<any>} predicate Predicate
+ * @returns {Promise<Result<any, Error>>} Result
+ * @example
+ * const [ content, error ] = await noex(
+ *     fs.promises.readFile('path/to/file')
+ * )
+ *//**
+ * Run a function in a try-catch block and return the result.
+ *
+ * @param {Function} predicate Predicate
+ * @returns {Result<any, Error>} Result
+ * @example
+ * const [ json, error ] = noex(function () {
+ *     return JSON.parse('{ "identity": "Bourne" }')
+ * })
  */
 function noex(predicate) {
     // Promise or Thenable
@@ -64,6 +118,8 @@ function noex(predicate) {
 
     return new Result(predicate)
 }
+
+noex.wrap = wrap
 
 module.exports = noex
 // Allows for named import

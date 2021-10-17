@@ -1,7 +1,8 @@
 {
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "plugin:jsdoc/recommended"],
     "env": { "node": true, "browser": true, "es6": true, "jest": true },
     "parserOptions": { "ecmaVersion": 2018 },
+    "plugins": [ "jsdoc" ],
     "rules": {
         "strict": ["error", "global"],
         "indent": ["error", 4],
@@ -10,7 +11,7 @@
         "quotes": ["warn", "single", { "avoidEscape": true }],
         "no-console": "warn",
         "require-jsdoc": "off",
-        "valid-jsdoc": "warn",
+        "valid-jsdoc": "off",
         "no-unused-vars": "warn",
         "no-trailing-spaces": "error",
         "curly": "error",
@@ -30,6 +31,9 @@
                 "+": true,
                 "-": true
             }
-        }]
+        }],
+        "jsdoc/check-alignment": "off",
+        "jsdoc/valid-types": "off",
+        "jsdoc/check-tag-names": ["warn", { "definedTags": ["typicalname"] }]
     }
 }
