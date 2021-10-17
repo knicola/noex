@@ -42,17 +42,10 @@ const { value, error } = noex(() => JSON.parse('{"success": true}'))
 
 **Example**
 ```js
-const userService = require('./async-resource-service')
-
-router.get('/api/resource', async (req, res) => {
-    const [ input, inputErr ] = await noex(resourceService.validate(req.body))
-
-    // validation error
-    if (inputErr) {
-        return res.sendStatus(422)
-    }
-
-    const [ resource, resourceErr ] = await noex(resourceService.findById(input.id))
+router.get('/api/resource/:id', async (req, res) => {
+    const [ resource, resourceErr ] = await noex(
+        resourceService.findById(req.params.id)
+    )
 
     // database error
     if (resourceErr) {
