@@ -96,7 +96,7 @@ const parseJson = noex.wrap(JSON.parse)
 const [ json, error ] = parseJson('{ "identity": "Bourne" }')
 ```
 
-#### Result: `Array<any, Error>`
+#### Result: `Array<any>`
 The object to hold the resulting value or error of a function, promise or thenable.
 
 Properties:
