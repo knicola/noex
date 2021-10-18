@@ -1,7 +1,7 @@
 {
     "name": "noex",
     "version": "1.0.0",
-    "description": "Golang style error handling for `Functions`, `Promises` and `Thenables`.",
+    "description": "Golang style error handling for Functions, Promises and Thenables.",
     "author": "@knicola",
     "license": "MIT",
     "keywords": [

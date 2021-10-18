@@ -66,19 +66,19 @@ describe('Unit tests', () => {
     }) // group
     describe('wrap()', () => {
         it('should wrap a function', async () => {
-            const successful = noex.wrap(str => str)
+            const successful = noex.wrap((...args) => args.reduce((r, v) => r + v, 0))
             const unsuccessful = noex.wrap(() => { throw new Error('oops') })
-            const s = successful('hello')
+            const s = successful(1, 2, 3, 4, 5)
             const u = unsuccessful()
-            toEqual(s, [ 'hello' ])
+            toEqual(s, [ 15 ])
             toEqual(u, [ undefined, new Error('oops') ])
         }) // test
         it('should wrap a promise', async () => {
-            const resolvable = noex.wrap(str => Promise.resolve(str))
+            const resolvable = noex.wrap((...args) => Promise.resolve(args.reduce((r, v) => r + v, 0)))
             const rejectable = noex.wrap(err => Promise.reject(err))
-            const res = await resolvable('hello')
+            const res = await resolvable(1, 2, 3, 4, 5)
             const rej = await rejectable(new Error('oops'))
-            toEqual(res, [ 'hello' ])
+            toEqual(res, [ 15 ])
             toEqual(rej, [ undefined, new Error('oops') ])
         }) // test
     }) // group

@@ -1,5 +1,9 @@
 'use strict'
 
+const isPromise  = value => value instanceof Promise
+const isThenable = value => value && value.then
+const isFunction = value => typeof value === 'function'
+
 /**
  * The object to hold the resulting value or error of a function, promise or thenable.
  */
@@ -7,7 +11,6 @@ class Result extends Array {
     /**
      * @param {any} value Value
      * @param {Error} error Error
-     * @returns {Result<any, Error>} Result
      */
     constructor(value, error) {
         super(value, error)
@@ -31,12 +34,12 @@ function resolve(promise) {
 /**
  * Call function in a try-catch block and return result.
  *
- * @param {Function} func Function
+ * @param {Function} fn Function
  * @returns {Result<any, Error>} Result
  */
-function call(func) {
+function call(fn) {
     try {
-        return new Result(func())
+        return new Result(fn())
     } catch (err) {
         return new Result(undefined, err)
     }
@@ -64,19 +67,13 @@ function call(func) {
  * const [ json, error ] = parseJson('{ "identity": "bourne" }')
  */
 function wrap(predicate) {
-    /**
-     * @param {any[]} args Arguments
-     * @returns {Result<any, Error>} Result
-     */
     return function (...args) {
         try {
             const res = predicate(...args)
 
-            if (res instanceof Promise || predicate.then) {
-                return resolve(res)
-            }
-
-            return new Result(res)
+            return isPromise(res) || isThenable(res)
+                ? resolve(res)
+                : new Result(res)
         } catch (err) {
             return new Result(undefined, err)
         }
@@ -104,11 +101,11 @@ function wrap(predicate) {
  */
 function noex(predicate) {
     // Promise or Thenable
-    if (predicate instanceof Promise || (predicate && predicate.then)) {
+    if (isPromise(predicate) || isThenable(predicate)) {
         return resolve(predicate)
     }
 
-    if (typeof predicate === 'function') {
+    if (isFunction(predicate)) {
         return call(predicate)
     }
 
