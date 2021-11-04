@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2021-11-04
+### Added
+* Ability to run a series of predicates and return their results.
+
 ## [1.1.0] - 2021-10-18
 ### Added
 * New method `wrap()` to wrap functions with noex.
