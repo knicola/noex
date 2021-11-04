@@ -79,6 +79,16 @@ const [ json, error ] = noex(function () {
 })
 ```
 
+#### noex(predicate: `Array<Promise<any>|Function>`): <code>Promise<Array<[Result<any, Error>](#result-arrayany-error)>></code>
+Run a series of functions, promises and/or thenables and return their results.
+
+```js
+const [ res1, res2 ] = await noex([
+    () => JSON.parse('{ "identity": "Bourne" }'),
+    fs.promises.readFile('path/to/file')
+])
+```
+
 #### noex.wrap(fn: `(...args: any[]) => Promise<any>`): <code>(...args: any[]) => Promise<[Result<any, Error>](#result-arrayany-error)></code>
 Wrap a function that returns a promise with noex.
 ```js
@@ -96,7 +106,7 @@ const parseJson = noex.wrap(JSON.parse)
 const [ json, error ] = parseJson('{ "identity": "Bourne" }')
 ```
 
-#### Result: `Array<any>`
+#### Result<any, Error>: `Array<any>`
 The object to hold the resulting value or error of a function, promise or thenable.
 
 Properties:
