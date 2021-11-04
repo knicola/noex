@@ -81,6 +81,11 @@ function wrap(predicate) {
 }
 
 /**
+ * Run a series of functions, promises and/or thenables and return their results.
+ *
+ * @param {Array<Promise<any>|Function>} predicate List of predicates
+ * @returns {Promise<Array<Result<any, Error>>>} List of results
+ *//**
  * Run a promise or thenable in a try-catch block and return the result.
  *
  * @param {Promise<any>} predicate Predicate
@@ -107,6 +112,10 @@ function noex(predicate) {
 
     if (isFunction(predicate)) {
         return call(predicate)
+    }
+
+    if (Array.isArray(predicate)) {
+        return Promise.all(predicate.map(noex))
     }
 
     if (predicate instanceof Error) {

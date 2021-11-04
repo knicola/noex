@@ -63,6 +63,19 @@ describe('Unit tests', () => {
 
             toEqual(res, [ val ])
         }) // test
+        it('should catch and return the result of a list of predicates', async () => {
+            const [ resolved, rejected, success, failure ] = await noex([
+                Promise.resolve('resolved'),
+                Promise.reject('rejected'),
+                () => 'success',
+                () => { throw new Error('failure') }
+            ])
+
+            toEqual(resolved, [ 'resolved', undefined ])
+            toEqual(rejected, [ undefined, 'rejected' ])
+            toEqual(success, [ 'success', undefined ])
+            toEqual(failure, [ undefined, new Error('failure') ])
+        }) // test
     }) // group
     describe('wrap()', () => {
         it('should wrap a function', async () => {
