@@ -14,10 +14,22 @@ export class Result<T, Error> extends Array<any> {
 }
 
 /**
+ * Run a series of functions, promises and/or thenables and return their results.
+ *
+ * @param predicate List of predicates
+ * @returns List of results
+ * @example
+ * const [ res1, res2 ] = await noex([
+ *     () => JSON.parse('{ "identity": "Bourne" }'),
+ *     fs.promises.readFile('path/to/file')
+ * ])
+ */
+export function noex<T>(predicate: Array<Promise<T>|Function>): Promise<Array<Result<T, Error>>>;
+/**
  * Run a promise or thenable in a try-catch block and return the result.
  *
- * @param {Promise<any>} predicate Predicate
- * @returns {Promise<Result<any, Error>>} Result
+ * @param predicate Predicate
+ * @returns Result
  * @example
  * const [ content, error ] = await noex(
  *     fs.promises.readFile('path/to/file')
@@ -27,8 +39,8 @@ export function noex<T>(predicate: Promise<T>): Promise<Result<T, Error>>;
 /**
  * Run a function in a try-catch block and return the result.
  *
- * @param {Function} predicate Predicate
- * @returns {Result<any, Error>} Result
+ * @param predicate Predicate
+ * @returns Result
  * @example
  * const [ json, error ] = noex(function () {
  *     return JSON.parse('{ "identity": "Bourne" }')
@@ -56,7 +68,7 @@ export module noex {
      * @example
      * const parseJson = noex.wrap(JSON.parse)
      *
-     * const [ json, error ] = parseJson('{ "identity": "bourne" }')
+     * const [ json, error ] = parseJson('{ "identity": "Bourne" }')
      */
     export function wrap<A extends any[], R>(fn: (...args: A) => R): (...args: A) => Result<R, Error>
 }

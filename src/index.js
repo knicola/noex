@@ -64,7 +64,7 @@ function call(fn) {
  * @example
  * const parseJson = noex.wrap(JSON.parse)
  *
- * const [ json, error ] = parseJson('{ "identity": "bourne" }')
+ * const [ json, error ] = parseJson('{ "identity": "Bourne" }')
  */
 function wrap(predicate) {
     return function (...args) {
@@ -85,6 +85,11 @@ function wrap(predicate) {
  *
  * @param {Array<Promise<any>|Function>} predicate List of predicates
  * @returns {Promise<Array<Result<any, Error>>>} List of results
+ * @example
+ * const [ res1, res2 ] = await noex([
+ *     () => JSON.parse('{ "identity": "Bourne" }'),
+ *     fs.promises.readFile('path/to/file')
+ * ])
  *//**
  * Run a promise or thenable in a try-catch block and return the result.
  *
