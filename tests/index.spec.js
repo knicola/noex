@@ -39,6 +39,16 @@ describe('Unit tests', () => {
 
             toEqual(res, [ undefined, expectedError ])
         }) // test
+        it('should resolve promise returned from a function', async () => {
+            const res = await noex(() => Promise.resolve('success'))
+
+            toEqual(res, [ 'success' ])
+        }) // test
+        it('should catch rejection returned from a function', async () => {
+            const res = await noex(() => Promise.reject('error'))
+
+            toEqual(res, [ undefined, 'error' ])
+        }) // test
         it('should return the result of a promise', async () => {
             const res = await noex(Promise.resolve('success'))
 

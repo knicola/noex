@@ -35,11 +35,16 @@ function resolve(promise) {
  * Call function in a try-catch block and return result.
  *
  * @param {Function} fn Function
+ * @param {...any} args Arguments
  * @returns {Result<any, Error>} Result
  */
-function call(fn) {
+function call(fn, ...args) {
     try {
-        return new Result(fn())
+        const res = fn(...args)
+
+        return isPromise(res) || isThenable(res)
+            ? resolve(res)
+            : new Result(res)
     } catch (err) {
         return new Result(undefined, err)
     }
@@ -67,17 +72,7 @@ function call(fn) {
  * const [ json, error ] = parseJson('{ "identity": "Bourne" }')
  */
 function wrap(predicate) {
-    return function (...args) {
-        try {
-            const res = predicate(...args)
-
-            return isPromise(res) || isThenable(res)
-                ? resolve(res)
-                : new Result(res)
-        } catch (err) {
-            return new Result(undefined, err)
-        }
-    }
+    return (...args) => call(predicate, ...args)
 }
 
 /**
