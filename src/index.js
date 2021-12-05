@@ -76,6 +76,30 @@ function wrap(predicate) {
 }
 
 /**
+ * Run the given predicates in sequence, passing the result of each predicate to the next one in the list.
+ *
+ * @param {Array<(...args: any[]) => any>} predicates List of functions and/or promises
+ * @returns {Promise<Result<any, Error>>} Result
+ * @example
+ * const [ val, err ] = await noex([
+ *     ()  => JSON.parse('{ "identity": "Bourne" }'),
+ *     json => json.identity.toUpperCase(),
+ * ])
+ * console.log(val) //=> "BOURNE"
+ */
+async function chain(predicates) {
+    let out
+    for (const predicate of [].concat(predicates || [])) {
+        out = await call(predicate, (out || {}).value)
+
+        if (out.error) {
+            return out
+        }
+    }
+    return out
+}
+
+/**
  * Run a series of functions, promises and/or thenables and return their results.
  *
  * @param {Array<Promise<any>|Function>} predicate List of predicates
@@ -126,6 +150,7 @@ function noex(predicate) {
 }
 
 noex.wrap = wrap
+noex.chain = chain
 
 module.exports = noex
 // Allows for named import
