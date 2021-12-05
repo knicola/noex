@@ -71,6 +71,19 @@ export module noex {
      * const [ json, error ] = parseJson('{ "identity": "Bourne" }')
      */
     export function wrap<A extends any[], R>(fn: (...args: A) => R): (...args: A) => Result<R, Error>
+    /**
+     * Run the given predicates in sequence, passing the result of each predicate to the next one in the list.
+     *
+     * @param predicates List of functions and/or promises
+     * @returns Result
+     * @example
+     * const [ val, err ] = await noex([
+     *     ()  => JSON.parse('{ "identity": "Bourne" }'),
+     *     json => json.identity.toUpperCase(),
+     * ])
+     * console.log(val) //=> "BOURNE"
+     */
+    export function chain(predicates: Array<(...args: any[]) => any>): Promise<Result<any, Error>>
 }
 
 export default noex;

@@ -105,4 +105,34 @@ describe('Unit tests', () => {
             toEqual(rej, [ undefined, new Error('oops') ])
         }) // test
     }) // group
+    describe('chain()', () => {
+        it('should chain the result of each predicate to the next and return the last result', async () => {
+            const res = await noex.chain([
+                () => JSON.parse('{ "identity": "Bourne" }'),
+                (json) => Promise.resolve(json.identity),
+                (identity) => identity.toUpperCase(),
+            ])
+
+            toEqual(res, [ 'BOURNE', undefined ])
+        }) // test
+        it('should interrupt the chain on failure and return the first error thrown', async () => {
+            const res1 = await noex.chain([
+                () => JSON.parse('{ "identity": "Bourne" }'),
+                (json) => Promise.resolve(json.identity),
+                () => Promise.reject(new Error('first oopsie')),
+                () => Promise.reject(new Error('second oopsie')),
+                (identity) => identity.toUpperCase(),
+            ])
+            const res2 = await noex.chain([
+                () => JSON.parse('{ "identity": "Bourne" }'),
+                (json) => Promise.resolve(json.identity),
+                () => { throw new Error('first oopsie') },
+                () => Promise.reject(new Error('second oopsie')),
+                (identity) => identity.toUpperCase(),
+            ])
+
+            toEqual(res1, [ undefined, new Error('first oopsie') ])
+            toEqual(res2, [ undefined, new Error('first oopsie') ])
+        }) // test
+    }) // group
 }) // group
